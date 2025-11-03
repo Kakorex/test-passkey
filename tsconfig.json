@@ -1,11 +1,11 @@
 {
-  "include": ["./index.ts"],
+  "include": ["./index.ts", "./tests/**/*.ts"],
   "compilerOptions": {
     "strict": true,
     "skipLibCheck": true,
     "target": "esnext",
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "module": "preserve",
+    "moduleResolution": "node",
     "allowSyntheticDefaultImports": true
   }
 }

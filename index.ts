@@ -1,28 +1,36 @@
 import { generateKeyPairSync } from 'node:crypto'
-import type { Protocol } from 'playwright-core/types/protocol'
 import cbor from 'cbor'
 
-type PlaywrightCredential = Protocol.WebAuthn.Credential
-
-export interface TestPasskey {
+export type TestPasskey = {
   credential: TestPasskeyCredential
   publicKey: Uint8Array
 }
 
-export interface TestPasskeyCredential
-  extends Pick<
-    PlaywrightCredential,
-    'credentialId' | 'rpId' | 'signCount' | 'privateKey'
-  > {
-  aaguid: string
+export type TestPasskeyCredential = {
+  /**
+   * Base64-encoded unique ID of the passkey.
+   */
+  credentialId: string
+  rpId: string
+  signCount: number
+  /**
+   * The ECDSA P-256 private key in PKCS#8 format.
+   */
+  privateKey: string
+  aaguid?: string
 }
 
-export type CreateTestPasskeyOptions = Partial<TestPasskeyCredential>
+export type CreateTestPasskeyOptions = {
+  rpId: string
+  credentialId?: string
+  aaguid?: string
+  signCount?: number
+}
 
 export function createTestPasskey(
   options: CreateTestPasskeyOptions,
 ): TestPasskey {
-  const { publicKey, privateKey } = generateKeys()
+  const { publicKey, privateKey } = generateKeyPair()
 
   return {
     credential: {
@@ -32,9 +40,7 @@ export function createTestPasskey(
        */
       credentialId: options.credentialId || btoa(crypto.randomUUID()),
       rpId: options.rpId,
-      aaguid:
-        options.aaguid ??
-        btoa(crypto.getRandomValues(new Uint8Array(16)).toString()),
+      aaguid: options.aaguid,
       signCount: options.signCount || 0,
       privateKey,
     },
@@ -42,7 +48,7 @@ export function createTestPasskey(
   }
 }
 
-function generateKeys() {
+function generateKeyPair() {
   const { privateKey, publicKey } = generateKeyPairSync('ec', {
     namedCurve: 'P-256',
   })

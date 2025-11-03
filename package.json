@@ -5,7 +5,7 @@
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest"
   },
   "keywords": [
     "passkey",
@@ -13,12 +13,18 @@
     "test",
     "mock"
   ],
+  "files": [
+    "./build",
+    "./index.ts"
+  ],
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@ossjs/release": "^0.10.0",
     "@types/node": "^24.10.0",
     "playwright-core": "^1.56.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.6"
   },
   "dependencies": {
     "cbor": "^10.0.11"
